@@ -26,7 +26,30 @@ select dept_name, avg(salary) as avg_salary
     group by dept_name
     order by avg_salary asc ;
 
---e
+--b:
+select building, count(course_id)
+    from section
+    group by building
+    having count(course_id) = (
+        select max(course_num)
+        from(
+            select building, count(course_id) as course_num
+            from section
+            group by building) as foo);
+
+--c:
+select dept_name, count(dept_name)
+    from course
+    group by dept_name
+    having count(dept_name) = (
+        select min(course_num)
+        from(
+            select dept_name, count(dept_name) as course_num
+            from course
+            group by dept_name) as foo);
+
+
+--e:
 select id, name from instructor
     where dept_name = 'Biology'
     or dept_name = 'Philosophy'
