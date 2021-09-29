@@ -70,4 +70,16 @@ select id, name from instructor
     where dept_name = 'Biology'
     or dept_name = 'Philosophy'
     or dept_name = 'Music';
-
+    
+--f:
+select name from instructor,(
+    select id from teaches
+    where year = 2018
+    group by id) as id_2018
+    where instructor.id = id_2018.id
+except
+select name from instructor,(
+    select id from teaches
+    where year = 2017
+    group by id) as id_2017
+    where instructor.id = id_2017.id;
