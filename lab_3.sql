@@ -10,7 +10,19 @@ select course_id from section where semester = 'Fall';
 --e:
 select id, name from student where tot_cred > 45 and tot_cred < 90;
 --f:
-select name from student;
+select name from student
+where name like '%a'
+    or name like '%e'
+    or name like '%i'
+    or name like '%o'
+    or name like '%y';
 --g:
 select course_id from prereq where prereq_id = 'CS-101';
+
+--2
+--a:
+select dept_name, avg(salary) as avg_salary
+    from instructor
+    group by dept_name
+    order by avg_salary asc ;
 
