@@ -48,7 +48,23 @@ select dept_name, count(dept_name)
             from course
             group by dept_name) as foo);
 
-
+--d:
+select name
+    from student
+    where id = (
+        select id
+            from (
+                 select id, count(id) as course_num
+                    from takes,(select course.course_id
+                        from course
+                        where dept_name = 'Comp. Sci.')
+                        as compsci
+                    where takes.course_id = compsci.course_id
+                    group by id
+                    having count(id) > 3
+                     ) as id_with_num
+        );
+        
 --e:
 select id, name from instructor
     where dept_name = 'Biology'
