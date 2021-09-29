@@ -8,7 +8,7 @@ select course_id from course where dept_name = 'Comp. Sci.';
 --d:
 select course_id from section where semester = 'Fall';
 --e:
-select id, name from student where tot_cred > 45 and tot_cred < 90;
+select name from student where tot_cred > 45 and tot_cred < 90;
 --f:
 select name from student
 where name like '%a'
@@ -25,4 +25,10 @@ select dept_name, avg(salary) as avg_salary
     from instructor
     group by dept_name
     order by avg_salary asc ;
+
+--e
+select id, name from instructor
+    where dept_name = 'Biology'
+    or dept_name = 'Philosophy'
+    or dept_name = 'Music';
 
