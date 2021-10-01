@@ -50,9 +50,8 @@ select dept_name, count(dept_name)
 
 --d:
 select name
-    from student
-    where id = (
-        select id
+    from student, (
+                 select id
             from (
                  select id, count(id) as course_num
                     from takes,(select course.course_id
@@ -63,7 +62,8 @@ select name
                     group by id
                     having count(id) > 3
                      ) as id_with_num
-        );
+        ) as stud_id
+    where student.id = stud_id.id;
         
 --e:
 select id, name from instructor
@@ -83,3 +83,30 @@ select name from instructor,(
     where year = 2017
     group by id) as id_2017
     where instructor.id = id_2017.id;
+
+--3a:
+select name
+    from student, (
+        select id
+        from takes, (
+            select course_id
+                from course
+                where dept_name = 'Comp. Sci.'
+            ) as compsci
+        where (grade = 'A'
+           or grade = 'A-')
+            and takes.course_id = compsci.course_id
+        group by id
+        ) as ids
+    where student.id = ids.id;
+    
+--b:
+select i_id
+    from advisor,(select id from takes
+        where grade <> 'A'
+        and grade <> 'A-'
+        and grade <> 'B+'
+        and grade <> 'B'
+        group by id) as stud_ids
+    where advisor.s_id = stud_ids.id
+    group by i_id;
