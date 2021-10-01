@@ -1,32 +1,36 @@
---1
---a:
+--1a:
 select course_id from course where credits > 3;
---b:
+
+--1b:
 select building, room_number from classroom where building = 'Watson' or building = 'Packard';
---c:
+
+--1c:
 select course_id from course where dept_name = 'Comp. Sci.';
---d:
+
+--1d:
 select course_id from section where semester = 'Fall';
---e:
+
+--1e:
 select name from student where tot_cred > 45 and tot_cred < 90;
---f:
+
+--1f:
 select name from student
 where name like '%a'
     or name like '%e'
     or name like '%i'
     or name like '%o'
     or name like '%y';
---g:
+
+--1g:
 select course_id from prereq where prereq_id = 'CS-101';
 
---2
---a:
+--2a:
 select dept_name, avg(salary) as avg_salary
     from instructor
     group by dept_name
     order by avg_salary asc ;
 
---b:
+--2b:
 select building, count(course_id)
     from section
     group by building
@@ -37,7 +41,7 @@ select building, count(course_id)
             from section
             group by building) as foo);
 
---c:
+--2c:
 select dept_name, count(dept_name)
     from course
     group by dept_name
@@ -48,7 +52,7 @@ select dept_name, count(dept_name)
             from course
             group by dept_name) as foo);
 
---d:
+--2d:
 select student.id, name from student
 inner join(
     select id from takes
@@ -60,13 +64,13 @@ inner join(
         as course_stud
 on student.id = course_stud.id;
         
---e:
+--2e:
 select id, name from instructor
     where dept_name = 'Biology'
     or dept_name = 'Philosophy'
     or dept_name = 'Music';
     
---f:
+--2f:
 select name from instructor
 inner join teaches
 on instructor.id = teaches.id
@@ -91,7 +95,7 @@ inner join
     group by id) as ids
 on student.id = ids.id;
     
---b:
+--3b:
 select i_id from advisor
 inner join takes
 on advisor.s_id = takes.id
@@ -101,7 +105,7 @@ on advisor.s_id = takes.id
     and grade <> 'B'
     group by i_id;
     
---c
+--3c:
 select dept_name from course
 inner join (
     select course_id from takes
@@ -112,3 +116,23 @@ inner join (
     as non_cf_course
 on course.course_id = non_cf_course.course_id
     group by dept_name;
+
+--3d:
+select name from instructor
+inner join (
+    select teaches.id from teaches
+    inner join takes
+    on teaches.year = takes.year
+        and teaches.semester = takes.semester
+        and teaches.sec_id = takes.sec_id
+        and teaches.course_id = takes.course_id
+    except
+    select teaches.id from teaches
+    inner join takes
+    on teaches.year = takes.year
+        and teaches.semester = takes.semester
+        and teaches.sec_id = takes.sec_id
+        and teaches.course_id = takes.course_id
+        where grade = 'A')
+    as no_A_inst
+on instructor.id = no_A_inst.id;
