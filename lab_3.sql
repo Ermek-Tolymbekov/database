@@ -97,12 +97,11 @@ group by id) as ids
 on student.id = ids.id;
     
 --b:
-select i_id
-    from advisor,(select id from takes
-        where grade <> 'A'
-        and grade <> 'A-'
-        and grade <> 'B+'
-        and grade <> 'B'
-        group by id) as stud_ids
-    where advisor.s_id = stud_ids.id
+select i_id from advisor
+inner join takes
+on advisor.s_id = takes.id
+    where grade <> 'A'
+    and grade <> 'A-'
+    and grade <> 'B+'
+    and grade <> 'B'
     group by i_id;
