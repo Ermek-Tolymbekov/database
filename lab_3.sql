@@ -1,28 +1,43 @@
 --1a:
-select course_id from course where credits > 3;
+select course_id
+    from course
+    where credits > 3;
 
 --1b:
-select building, room_number from classroom where building = 'Watson' or building = 'Packard';
+select building, room_number 
+    from classroom 
+    where building = 'Watson'
+       or building = 'Packard';
 
 --1c:
-select course_id from course where dept_name = 'Comp. Sci.';
+select course_id 
+    from course
+    where dept_name = 'Comp. Sci.';
 
 --1d:
-select course_id from section where semester = 'Fall';
+select course_id 
+    from section 
+    where semester = 'Fall';
 
 --1e:
-select name from student where tot_cred > 45 and tot_cred < 90;
+select name 
+    from student 
+    where tot_cred > 45
+      and tot_cred < 90;
 
 --1f:
-select name from student
-where name like '%a'
-    or name like '%e'
-    or name like '%i'
-    or name like '%o'
-    or name like '%y';
+select name
+    from student
+    where name like '%a'
+       or name like '%e'
+       or name like '%i'
+       or name like '%o'
+       or name like '%y';
 
 --1g:
-select course_id from prereq where prereq_id = 'CS-101';
+select course_id
+    from prereq
+    where prereq_id = 'CS-101';
 
 --2a:
 select dept_name, avg(salary) as avg_salary
@@ -136,3 +151,10 @@ inner join (
         where grade = 'A')
     as no_A_inst
 on instructor.id = no_A_inst.id;
+
+--3e:
+select course_id from section
+inner join time_slot
+on section.time_slot_id = time_slot.time_slot_id
+    where end_hr < 13
+    group by course_id;
