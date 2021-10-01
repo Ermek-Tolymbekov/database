@@ -88,7 +88,7 @@ inner join
     where dept_name = 'Comp. Sci.'
         and (grade = 'A'
         or grade = 'A-')
-group by id) as ids
+    group by id) as ids
 on student.id = ids.id;
     
 --b:
@@ -100,3 +100,15 @@ on advisor.s_id = takes.id
     and grade <> 'B+'
     and grade <> 'B'
     group by i_id;
+    
+--c
+select dept_name from course
+inner join (
+    select course_id from takes
+    except
+    select course_id from takes
+        where grade = 'C'
+        or grade = 'F')
+    as non_cf_course
+on course.course_id = non_cf_course.course_id
+    group by dept_name;
