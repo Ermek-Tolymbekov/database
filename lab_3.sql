@@ -85,20 +85,16 @@ select name from instructor,(
     where instructor.id = id_2017.id;
 
 --3a:
-select name
-    from student, (
-        select id
-        from takes, (
-            select course_id
-                from course
-                where dept_name = 'Comp. Sci.'
-            ) as compsci
-        where (grade = 'A'
-           or grade = 'A-')
-            and takes.course_id = compsci.course_id
-        group by id
-        ) as ids
-    where student.id = ids.id;
+select name from student
+inner join
+(select id from takes
+    inner join course
+    on takes.course_id = course.course_id
+    where dept_name = 'Comp. Sci.'
+        and (grade = 'A'
+        or grade = 'A-')
+group by id) as ids
+on student.id = ids.id;
     
 --b:
 select i_id
