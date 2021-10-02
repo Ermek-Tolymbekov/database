@@ -32,6 +32,7 @@ select name
        or name like '%e'
        or name like '%i'
        or name like '%o'
+       or name like '%u'
        or name like '%y';
 
 --1g:
