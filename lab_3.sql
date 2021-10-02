@@ -69,16 +69,21 @@ select dept_name, count(dept_name)
             group by dept_name) as foo);
 
 --2d:
-select student.id, name from student
-inner join(
-    select id from takes
-    inner join course
-    on takes.course_id = course.course_id
-        where dept_name = 'Comp. Sci.'
-        group by id
-        having count(id) > 3)
-        as course_stud
-on student.id = course_stud.id;
+select student.id, name
+    from student, (
+                 select id
+            from (
+                 select id, count(id) as course_num
+                    from takes,(select course.course_id
+                        from course
+                        where dept_name = 'Comp. Sci.')
+                        as compsci
+                    where takes.course_id = compsci.course_id
+                    group by id
+                    having count(id) > 3
+                     ) as id_with_num
+        ) as stud_id
+    where student.id = stud_id.id;
         
 --2e:
 select id, name from instructor
@@ -87,50 +92,54 @@ select id, name from instructor
     or dept_name = 'Music';
     
 --2f:
-select name from instructor
-inner join teaches
-on instructor.id = teaches.id
+select name from instructor,(
+    select id from teaches
     where year = 2018
-    group by name
+    group by id) as id_2018
+where instructor.id = id_2018.id
 except
-select name from instructor
-inner join teaches
-on instructor.id = teaches.id
+select name from instructor,(
+    select id from teaches
     where year = 2017
-    group by name;
+    group by id) as id_2017
+where instructor.id = id_2017.id;
 
 --3a:
-select name from student
-inner join
-(select id from takes
-    inner join course
-    on takes.course_id = course.course_id
-    where dept_name = 'Comp. Sci.'
-        and (grade = 'A'
-        or grade = 'A-')
-    group by id) as ids
-on student.id = ids.id;
+select name
+    from student, (
+        select id
+        from takes, (
+            select course_id
+                from course
+                where dept_name = 'Comp. Sci.'
+            ) as compsci
+        where (grade = 'A'
+           or grade = 'A-')
+            and takes.course_id = compsci.course_id
+        group by id
+        ) as ids
+    where student.id = ids.id;
     
 --3b:
-select i_id from advisor
-inner join takes
-on advisor.s_id = takes.id
-    where grade <> 'A'
-    and grade <> 'A-'
-    and grade <> 'B+'
-    and grade <> 'B'
+select i_id
+    from advisor,(select id from takes
+        where grade <> 'A'
+        and grade <> 'A-'
+        and grade <> 'B+'
+        and grade <> 'B'
+        group by id) as stud_ids
+    where advisor.s_id = stud_ids.id
     group by i_id;
     
 --3c:
-select dept_name from course
-inner join (
-    select course_id from takes
-    except
-    select course_id from takes
-        where grade = 'C'
-        or grade = 'F')
-    as non_cf_course
-on course.course_id = non_cf_course.course_id
+select dept_name
+    from course, (
+        select course_id from takes
+            where grade <> 'F'
+                and grade <> 'C'
+            group by course_id)
+        as sorted_courses
+    where course.course_id = sorted_courses.course_id
     group by dept_name;
 
 --3d:
