@@ -27,7 +27,7 @@ group by d.name;
 
 --f
 select c.name, city, d.name, charge
-from (dealer d right join client c on d.id = c.dealer_id) inner join sell s
+from (dealer d left join client c on d.id = c.dealer_id) inner join sell s
 on d.id = s.dealer_id and c.id = s.client_id;
 
 --g
