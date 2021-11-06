@@ -27,13 +27,11 @@ group by d.name;
 
 --f
 select c.name, city, d.name, charge
-from (dealer d left join client c on d.id = c.dealer_id) inner join sell s
-on d.id = s.dealer_id and c.id = s.client_id;
+from dealer d left join client c on d.id = c.dealer_id;
 
 --g
 select c.name, city, d.name, charge
-from (dealer d left join client c on d.id = c.dealer_id) inner join sell s
-on d.id = s.dealer_id and c.id = s.client_id
+from dealer d left join client c on d.id = c.dealer_id
 where charge > 0.12;
 
 --h
