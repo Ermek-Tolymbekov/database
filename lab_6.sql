@@ -42,6 +42,7 @@ from (client c full join dealer d on d.id = c.dealer_id) inner join sell s
 on d.id = s.dealer_id and c.id = s.client_id;
 
 --2
+
 --a
 create view unique_clients as
     select date, count(distinct client_id) clients, avg(amount) average, sum(amount) total_amount
